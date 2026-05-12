@@ -56,23 +56,22 @@ async def get_claude_response(unified_msg: UnifiedMessage):
             ]
         )
         
+        import re
+        
         raw_content = response.content[0].text
-        content = raw_content.strip()
+        print(f"Raw Claude Response: {raw_content}")
         
-        # Simple cleanup in case Claude wraps the JSON in markdown blocks
-        if "```json" in content:
-            content = content.split("```json")[1].split("```")[0].strip()
-        elif "```" in content:
-            content = content.split("```")[1].split("```")[0].strip()
-        
-        # Handle cases where splitting might result in an empty string
-        if not content:
+        # Use regex to find the first JSON object { ... } in the response
+        json_match = re.search(r'\{.*\}', raw_content, re.DOTALL)
+        if json_match:
+            content = json_match.group(0)
+        else:
             content = raw_content.strip()
             
         return json.loads(content)
 
     except Exception as e:
-        # Log the error and return a safe fallback for the agent
+        # Log the error and return a safe fallback
         print(f"DEBUG: Claude API error: {e}")
         return {
             "query_type": "general_enquiry",
