@@ -1,0 +1,35 @@
+[
+  {
+    "description": "Pre-sales availability & pricing",
+    "payload": {
+      "source": "whatsapp",
+      "guest_name": "Rahul Sharma",
+      "message": "Is the villa available from April 20 to 24? What is the rate for 2 adults?",
+      "timestamp": "2026-05-05T10:30:00Z",
+      "booking_ref": "NIS-2024-0891",
+      "property_id": "villa-b1"
+    }
+  },
+  {
+    "description": "General Enquiry (Pets)",
+    "payload": {
+      "source": "airbnb",
+      "guest_name": "Sarah Connor",
+      "message": "Hello, do you allow pets in the villa? We have a small friendly dog.",
+      "timestamp": "2026-05-05T12:00:00Z",
+      "booking_ref": "NIS-2024-0892",
+      "property_id": "villa-b1"
+    }
+  },
+  {
+    "description": "Complaint (AC Issue)",
+    "payload": {
+      "source": "booking_com",
+      "guest_name": "John Doe",
+      "message": "The AC in the master bedroom is making a loud noise and not cooling. Please fix it immediately.",
+      "timestamp": "2026-05-06T09:00:00Z",
+      "booking_ref": "NIS-2024-0893",
+      "property_id": "villa-b1"
+    }
+  }
+]
