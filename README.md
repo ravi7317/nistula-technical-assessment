@@ -17,30 +17,46 @@ This repository contains the backend implementation for the Nistula Guest Messag
 ## Part 1: Guest Message Handler
 
 ### Setup Instructions
+Follow these steps to set up the project locally after cloning:
+
 1.  **Clone the repository**:
     ```bash
     git clone https://github.com/ravi7317/nistula-technical-assessment.git
     cd nistula-technical-assessment
     ```
+
 2.  **Install dependencies**:
+    Ensure you have Python 3.9+ installed, then run:
     ```bash
     pip install -r requirements.txt
     ```
-3.  **Configure environment**:
-    Create a `.env` file in the root directory and add your Anthropic API key:
+
+3.  **Configure Environment Variables**:
+    The `.env` file is ignored by Git for security. You **must** create a new `.env` file in the root directory based on the provided template:
+    *   Copy `.env.example` to `.env`
+    *   Add your **Anthropic API Key** to the `ANTHROPIC_API_KEY` field.
     ```env
-    ANTHROPIC_API_KEY=your_key_here
+    ANTHROPIC_API_KEY=your_actual_key_here
     PORT=8000
     DEBUG=True
     ```
-4.  **Run the server**:
+
+4.  **Run the Server**:
+    Start the FastAPI backend using:
     ```bash
     python -m app.main
     ```
 
+
+### Interactive API Documentation
+Once the server is running, you can access the **interactive Swagger documentation** to test the webhook endpoint directly from your browser:
+👉 **[http://localhost:8000/docs](http://localhost:8000/docs)**
+
 ### Webhook Endpoint
 - **URL**: `POST /webhook/message`
+- **Method**: `POST`
 - **Sample Payload**:
+
   ```json
   {
      "source": "whatsapp",
@@ -73,4 +89,3 @@ The schema in `schema.sql` is designed for a unified messaging platform. Key fea
 Strategic responses to 3 AM guest emergencies and long-term infrastructure improvements are documented in `thinking.md`.
 
 ---
-*Built as part of the Nistula Technical Assessment.*

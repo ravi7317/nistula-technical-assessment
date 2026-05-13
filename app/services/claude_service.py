@@ -1,9 +1,11 @@
 import anthropic
 import json
+import re
 from app.config import Config
 from app.models.request_models import UnifiedMessage
 
-client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
+# Using AsyncAnthropic for non-blocking I/O in FastAPI
+client = anthropic.AsyncAnthropic(api_key=Config.ANTHROPIC_API_KEY)
 
 MOCK_PROPERTY_CONTEXT = """
 Property: Villa B1, Assagao, North Goa
@@ -47,7 +49,8 @@ async def get_claude_response(unified_msg: UnifiedMessage):
     """
 
     try:
-        response = client.messages.create(
+        # Await the async client call
+        response = await client.messages.create(
             model=Config.CLAUDE_MODEL,
             max_tokens=1000,
             system="You are a helpful, concise hospitality assistant for Nistula. You respond only in valid JSON. Your tone is WhatsApp-native: professional yet warm and brief.",
@@ -56,19 +59,23 @@ async def get_claude_response(unified_msg: UnifiedMessage):
             ]
         )
         
-        import re
-        
         raw_content = response.content[0].text
-        print(f"Raw Claude Response: {raw_content}")
         
+        # Log response reception safely
+        print(f"DEBUG: Claude response received (length: {len(raw_content)})")
+
         # Use regex to find the first JSON object { ... } in the response
-        json_match = re.search(r'\{.*\}', raw_content, re.DOTALL)
+        json_match = re.search(r'(\{.*\})', raw_content, re.DOTALL)
         if json_match:
-            content = json_match.group(0)
+            content = json_match.group(1)
         else:
             content = raw_content.strip()
             
-        return json.loads(content)
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError as e:
+            print(f"ERROR: Failed to parse JSON from Claude: {e}")
+            raise e
 
     except Exception as e:
         # Log the error and return a safe fallback
@@ -78,3 +85,4 @@ async def get_claude_response(unified_msg: UnifiedMessage):
             "drafted_reply": "I'm sorry, I'm having a bit of trouble processing that. Our team will get back to you shortly!",
             "confidence_score": 0.0
         }
+
